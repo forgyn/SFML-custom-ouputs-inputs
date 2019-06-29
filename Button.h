@@ -59,17 +59,20 @@ private:
 
 class TextButton : public Button {
 public:
-	TextButton(float pos_x, float pos_y,float size_x,float size_y,const string &text, RenderWindow* window);
+	TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window);
+	TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window, Font* font);
 	~TextButton();
 	void draw();
+	void update();
 	void changeStyle(Uint32 style);
 	void setFont(Font* font);
-	void setPtr(Mouse* mouse, Event* evnt, Font* font);
 	void setFont(string path);
+	void setColor(Color bck_col,Color txt_col = Color::Black);
+	void setString(string str) { _text->setString(str); }
 	void getDebugInfo();
 private:
 	Text *_text = nullptr;
-	string _str;
 	bool loadedFont = false;
 	Font* _font = nullptr;
+	Color _basic_text_color;
 };

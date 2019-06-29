@@ -1,22 +1,28 @@
 #include "TextOutput.h"
 
-TextOutput::TextOutput(float pos_x, float pos_y, float size, RenderWindow* window){
+TextOutput::TextOutput(float pos_x, float pos_y, float size, Font* font, RenderWindow* window){
 	_window = window;
 	_text = new Text();
 	_text->setString("");
 	_text->setCharacterSize(size);
 	_position.x = pos_x;
 	_position.y = pos_y;
+	_font = font;
+	loadedFont = true;
+	_text->setFont(*_font);
 	_text->setPosition(_position);
 	_text->setFillColor(Color::Black);
 }
 
-TextOutput::TextOutput(Vector2f pos, float size, RenderWindow* window){
+TextOutput::TextOutput(Vector2f pos, float size, Font* font, RenderWindow* window){
 	_window = window;
 	_text = new Text();
 	_text->setString("");
 	_text->setCharacterSize(size);
 	_position = pos;
+	_font = font;
+	loadedFont = true;
+	_text->setFont(*_font);
 	_text->setPosition(_position);
 	_text->setFillColor(Color::Black);
 }
@@ -59,15 +65,15 @@ void TextOutput::update()
 	_text->setPosition(_position);
 }
 
-void TextOutput::setFont(Font* font)
-{
+void TextOutput::setFont(Font* font){
+	if (_font != nullptr && !loadedFont)delete _font;
 	_font = font;
 	_text->setFont(*_font);
 	loadedFont = true;
 }
 
-void TextOutput::setFont(string path)
-{
+void TextOutput::setFont(string path){
+	if (_font != nullptr && !loadedFont)delete _font;
 	_font = new Font();
 	_font->loadFromFile(path);
 	_text->setFont(*_font);

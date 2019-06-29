@@ -78,6 +78,7 @@ void Button::update() {
 	_backgroud->setSize(_size);
 	if (isPointed()) {
 		if (_event->type != Event::MouseButtonPressed) {
+			if(_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
 				_basicColor.r * 0.5f,
 				_basicColor.g * 0.5f,
@@ -217,13 +218,28 @@ void DraggableButton::setLimit(float min_x, float max_x, float min_y, float max_
 TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y,  const string& text, RenderWindow* window)
 	:Button(size_x, size_y,pos_x,pos_y,window){
 	_window = window;
-	_str = text;
 	_text = new Text;
 	_text->setString(text);
 	_text->setCharacterSize(_size.y * TEXT_RATIO);
 	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
-	_text->setFillColor(Color::Black);
+	_basic_text_color = Color::Black;
+	_text->setFillColor(_basic_text_color);
+}
+
+TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window, Font* font)
+:Button(size_x, size_y, pos_x, pos_y, window){
+	_window = window;
+	_text = new Text;
+	_text->setString(text);
+	_text->setCharacterSize(_size.y * TEXT_RATIO);
+	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
+	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
+	_basic_text_color = Color::Black;
+	_text->setFillColor(_basic_text_color);
+	_font = font;
+	_text->setFont(*_font);
+	loadedFont = true;
 }
 
 TextButton::~TextButton()
@@ -236,6 +252,38 @@ void TextButton::draw(){
 	
 	_window->draw(*_backgroud);
 	_window->draw(*_text);
+}
+
+void TextButton::update(){
+	updateRatio();
+
+	_backgroud->setPosition(_position);
+	_backgroud->setSize(_size);
+	if (isPointed()) {
+		if (_event->type != Event::MouseButtonPressed) {
+			if (_backgroud->getFillColor() != Color::Transparent)
+				_backgroud->setFillColor(Color(
+					_basicColor.r * 0.5f,
+					_basicColor.g * 0.5f,
+					_basicColor.b * 0.5f));
+			if (_text->getFillColor() != Color::Transparent)
+				_text->setFillColor(Color(
+					_basic_text_color.r * 0.5f,
+					_basic_text_color.g * 0.5f,
+					_basic_text_color.b * 0.5f
+				));
+		}
+		else {
+			_backgroud->setFillColor(_basicColor);
+			_text->setFillColor(_basic_text_color);
+			PRESSED = true;
+		}
+	}
+	else {
+		_backgroud->setFillColor(_basicColor);
+		_text->setFillColor(_basic_text_color);
+	}
+
 }
 
 void TextButton::changeStyle(Uint32 style){
@@ -251,21 +299,20 @@ void TextButton::setFont(Font* font)
 	loadedFont = true;
 }
 
-void TextButton::setPtr(Mouse* mouse, Event* evnt, Font* font)
-{
-	_mouse = mouse;
-	_event = evnt;
-	_font = font;
-	_text->setFont(*_font);
-	loadedFont = true;
-}
-
 void TextButton::setFont(string path)
 {
 	_font = new Font();
 	_font->loadFromFile(path);
 	_text->setFont(*_font);
 	loadedFont = false;
+}
+
+void TextButton::setColor(Color bck_col, Color txt_col)
+{
+	_basicColor = bck_col;
+	_basic_text_color = txt_col;
+	_backgroud->setFillColor(_basicColor);
+	_text->setFillColor(_basic_text_color);
 }
 
 void TextButton::getDebugInfo(){

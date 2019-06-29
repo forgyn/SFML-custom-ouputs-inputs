@@ -3,8 +3,8 @@
 
 class TextOutput : public OutputElement{
 public:
-	TextOutput(float pos_x, float pos_y, float size,RenderWindow* window);
-	TextOutput(Vector2f pos, float size, RenderWindow* window);
+	TextOutput(float pos_x, float pos_y, float size,Font* font,RenderWindow* window);
+	TextOutput(Vector2f pos, float size, Font* font, RenderWindow* window);
 	~TextOutput();
 	void draw();
 	void setValue(const string &value);

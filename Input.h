@@ -8,7 +8,8 @@ public:
 	void setWindow(RenderWindow* window) { _window = window; }
 	void setMouse(Mouse* mouse) { _mouse = mouse; }
 	void setEvent(Event* evnt) { _event = evnt; }
-	virtual void setPtr(Mouse* mouse, Event* evnt){ _mouse = mouse; _event = evnt;}
+	virtual void setPtr(Mouse* mouse, Event* evnt) { _mouse = mouse; _event = evnt; }
+	virtual void setPtr(RenderWindow* window, Mouse* mouse, Event* evnt) { _window = window; _mouse = mouse; _event = evnt; }
 	virtual void draw() = 0;
 	virtual void update() = 0;
 	Vector2f getRatio() { return _ratio; }
