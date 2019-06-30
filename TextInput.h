@@ -11,7 +11,9 @@ public:
 	void update(Event* _event, Mouse* _mouse);
 	bool ACTIVATED = false;
 	void addChar(Event* _event);
+	bool isConfirmed();
 	void setFont(Font* font);
+	void setValue(string value);
 	void setBackgroundTexture(string path);
 	void setBackgroundTexture(Texture* texture);
 	void setBackgroundRectTexture(string path, IntRect rect);
@@ -28,6 +30,7 @@ private:
 	Font* _font = nullptr;
 	Clock _clock;
 	Button* _button = nullptr;
+	bool _CONFIRMED = false;
 	RectangleShape* _background = nullptr;
 	RectangleShape* _cursor = nullptr;
 	string _input = "";

@@ -70,7 +70,6 @@ public:
 	void setColor(Color bck_col,Color txt_col = Color::Black);
 	void setString(string str) { _text->setString(str); }
 	void setTextRatio(float ratio);
-	void getDebugInfo();
 private:
 	Text *_text = nullptr;
 	bool loadedFont = false;

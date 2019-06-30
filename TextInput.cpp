@@ -71,7 +71,13 @@ void TextInput::update(Event* _event, Mouse* _mouse){
 		ACTIVATED = false;
 	}
 	if (ACTIVATED) {
-		if (_event->type == Event::TextEntered)addChar(_event);
+		if (_event->text.unicode == Keyboard::Enter) {
+			ACTIVATED = false;
+			_CONFIRMED = true;
+		}else
+		if (_event->type == Event::TextEntered) { 
+			addChar(_event); 
+		}
 	}
 	else {
 		_cursor->setFillColor(Color::Transparent);
@@ -98,6 +104,13 @@ void TextInput::addChar(Event* _event)
 
 }
 
+bool TextInput::isConfirmed(){
+	if (_CONFIRMED) {
+		_CONFIRMED = false;
+		return true;
+	}
+	return false;
+}
 
 
 void TextInput::setBackgroundTexture(string path){
@@ -142,4 +155,10 @@ void TextInput::setFont(Font* font)
 {
 	_font = font;
 	_inputText->setFont(*_font);
+}
+
+void TextInput::setValue(string value)
+{
+	_input = value;
+	_inputText->setString(value);
 }

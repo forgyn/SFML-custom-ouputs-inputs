@@ -344,11 +344,3 @@ void TextButton::setTextRatio(float ratio) {
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 }
 
-void TextButton::getDebugInfo(){
-	cout << "Text origin            : " << _text->getOrigin().x << " " << _text->getOrigin().y << endl;
-	cout << "Text size              : " << _text->getLocalBounds().width << " " << _text->getLocalBounds().height << endl;
-	cout << "Background size        : " << _backgroud->getSize().x << " " << _backgroud->getSize().y << endl;
-	cout << "Text position          : " << _text->getPosition().x << " " << _text->getPosition().y << endl;
-	cout << "Background position    : " << _backgroud->getPosition().x << " " << _backgroud->getPosition().y << endl;
-	cout << "Offset                 : " << _position.x + ((_size.x - _text->getLocalBounds().width) / 2) << " " << _position.y + ((_size.y - _text->getLocalBounds().height) / 2) << endl;
-}
