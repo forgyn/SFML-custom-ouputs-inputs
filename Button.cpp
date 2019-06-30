@@ -224,7 +224,8 @@ TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y,  co
 	_window = window;
 	_text = new Text;
 	_text->setString(text);
-	_text->setCharacterSize(_size.y * TEXT_RATIO);
+	_text_ratio = TEXT_RATIO;
+	_text->setCharacterSize(_size.y * _text_ratio);
 	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 	_basic_text_color = Color::Black;
@@ -238,7 +239,8 @@ TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, con
 	_text->setString(text);
 	_font = font;
 	_text->setFont(*_font);
-	_text->setCharacterSize(_size.y * TEXT_RATIO);
+	_text_ratio = TEXT_RATIO;
+	_text->setCharacterSize(_size.y * _text_ratio);
 	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 	_basic_text_color = Color::Black;
@@ -333,6 +335,13 @@ void TextButton::setColor(Color bck_col, Color txt_col)
 	_basic_text_color = txt_col;
 	_backgroud->setFillColor(_basicColor);
 	_text->setFillColor(_basic_text_color);
+}
+
+void TextButton::setTextRatio(float ratio) {
+	_text_ratio = ratio;
+	_text->setCharacterSize(_size.y * _text_ratio * (_text->getCharacterSize()/_text->getLocalBounds().height));
+	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
+	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 }
 
 void TextButton::getDebugInfo(){
