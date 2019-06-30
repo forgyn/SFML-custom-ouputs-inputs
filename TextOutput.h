@@ -22,7 +22,7 @@ public:
 
 	Vector2f getSize();
 	void changePos(const float &x,const float &y);
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 private:
 	Text* _text = nullptr;
 	Font* _font = nullptr;

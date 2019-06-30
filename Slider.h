@@ -6,7 +6,7 @@ public:
 	Slider(float size_x, float size_y, float pos_x, float pos_y,RenderWindow* window);
 	Slider(Vector2f size, Vector2f pos,RenderWindow* window);
 	~Slider();
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 	void setBackgroundTexture(Texture* texture);
 	void setBackgroundTexture(string path);
 	void setBackgroundRectTexture(Texture* texture,IntRect rec);
@@ -15,7 +15,6 @@ public:
 	void setSpecialTexture(string path);
 	void setSpecialRectTexture(Texture* texture, IntRect rec);
 	void setSpecialRectTexture(string path, IntRect rect);
-	void setPtr(Mouse* mouse, Event* evnt);
 	void changeRatio(float ration);
 	void draw();
 	void release();

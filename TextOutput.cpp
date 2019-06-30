@@ -33,7 +33,7 @@ TextOutput::~TextOutput(){
 }
 
 void TextOutput::draw(){
-	update();
+	update(nullptr,nullptr);
 	_window->draw(*_text);
 }
 
@@ -59,7 +59,7 @@ void TextOutput::changePos(const float& x, const float& y)
 	_position.y = y;
 }
 
-void TextOutput::update()
+void TextOutput::update(Event* _event, Mouse* _mouse)
 {
 	_text->setString(_value);
 	_text->setPosition(_position);

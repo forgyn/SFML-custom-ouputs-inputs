@@ -1,6 +1,6 @@
 #include "Input.h"
 
-void InputElement::updateRatio(){
+void InputElement::updateRatio(Event* _event){
 	if (_event->type == Event::Resized) {
 		if (_defaultWindowSize == _window->getSize())resized = false;
 		else resized = true;

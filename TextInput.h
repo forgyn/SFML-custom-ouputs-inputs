@@ -5,15 +5,13 @@
 #define OFFSET_X 0.02
 class TextInput : InputElement{
 public:
-	TextInput(float size_x, float size_y, float pos_x, float pos_y, RenderWindow* window);
-	TextInput(Vector2f size, Vector2f pos, RenderWindow* window);
+	TextInput(float size_x, float size_y, float pos_x, float pos_y,Font* font, RenderWindow* window);
+	TextInput(Vector2f size, Vector2f pos, Font* font, RenderWindow* window);
 	void draw();
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 	bool ACTIVATED = false;
-	void addChar();
-	void setPtr(Mouse* mouse, Event* evnt, Font* font);
+	void addChar(Event* _event);
 	void setFont(Font* font);
-	void setFont(string path);
 	void setBackgroundTexture(string path);
 	void setBackgroundTexture(Texture* texture);
 	void setBackgroundRectTexture(string path, IntRect rect);
@@ -36,6 +34,5 @@ private:
 	Text* _inputText = nullptr;
 	Vector2f _size;
 	Vector2f _position;
-	bool loadedFont = false;
 };
 

@@ -10,8 +10,6 @@ using namespace sf;
 class OutputElement{
 public:
 	void setWindow(RenderWindow* window) { _window = window; }
-	void setMouse(Mouse* mouse) { _mouse = mouse; }
-	void setEvent(Event* evnt) { _event = evnt; }
 	virtual void setBackgroundTexture(Texture* texture) = 0;
 	virtual void setBackgroundTexture(string path) = 0;
 	virtual void setBackgroundRectTexture(Texture* texture, IntRect rect) = 0;
@@ -21,12 +19,10 @@ public:
 	virtual void setSpecialRectTexture(Texture* texture, IntRect rect) = 0;
 	virtual void setSpecialRectTexture(string path, IntRect rect) = 0;
 	virtual void draw() = 0;
-	virtual void update() = 0;
+	virtual void update(Event* _event,Mouse* _mouse) = 0;
 	virtual void setValue(const string &) = 0;
 protected:
 	string _value;
 	RenderWindow* _window;
-	Mouse* _mouse;
-	Event* _event;
 };
 

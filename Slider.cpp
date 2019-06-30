@@ -62,9 +62,9 @@ Slider::~Slider()
 	if (!_loadedTexture)delete _texture;
 }
 
-void Slider::update(){
-	updateRatio();
-	_button->update();
+void Slider::update(Event* _event, Mouse* _mouse){
+	updateRatio(_event);
+	_button->update(_event,_mouse);
 	if (_event->type == Event::MouseButtonReleased)release();
 	if (_button->FOLLOWING) {
 		if (_mouse->getPosition(*_window).y / _ratio.y > _position.y + _size.y) release();
@@ -128,12 +128,6 @@ void Slider::setSpecialRectTexture(string path, IntRect rect){
 	_button->setColor(Color::White);
 }
 
-void Slider::setPtr(Mouse* mouse, Event* evnt)
-{
-	_mouse = mouse;
-	_event = evnt;
-	_button->setPtr(_mouse, _event);
-}
 
 void Slider::changeRatio(float ration)
 {

@@ -1,7 +1,7 @@
 #include "TextInput.h"
 
 
-TextInput::TextInput(float size_x, float size_y, float pos_x, float pos_y, RenderWindow* window)
+TextInput::TextInput(float size_x, float size_y, float pos_x, float pos_y, Font* font, RenderWindow* window)
 	:_size(Vector2f(size_x,size_y)),_position(Vector2f(pos_x,pos_y)){
 	_window = window;
 	_button = new Button(_size, _position,_window);
@@ -17,12 +17,14 @@ TextInput::TextInput(float size_x, float size_y, float pos_x, float pos_y, Rende
 
 	_inputText = new Text;
 	_inputText->setString(_input);
+	_font = font;
+	_inputText->setFont(*_font);
 	_inputText->setCharacterSize(_size.y * 0.8);
 	_inputText->setPosition(_position.x + (_size.x * OFFSET_X),_position.y);
 	_inputText->setFillColor(Color::Black);
 }
 
-TextInput::TextInput(Vector2f size, Vector2f pos, RenderWindow* window)
+TextInput::TextInput(Vector2f size, Vector2f pos, Font* font, RenderWindow* window)
 	:_size(size), _position(pos) {
 	_window = window;
 	_button = new Button(_size, _position,_window);
@@ -38,6 +40,8 @@ TextInput::TextInput(Vector2f size, Vector2f pos, RenderWindow* window)
 
 	_inputText = new Text;
 	_inputText->setString(_input);
+	_font = font;
+	_inputText->setFont(*_font);
 	_inputText->setCharacterSize(_size.y * 0.8);
 	_inputText->setPosition(_position.x + (_size.x * OFFSET_X), _position.y);
 	_inputText->setFillColor(Color::Black);
@@ -55,19 +59,19 @@ void TextInput::draw(){
 	_window->draw(*_inputText);
 }
 
-void TextInput::update(){
-	_button->update();
+void TextInput::update(Event* _event, Mouse* _mouse){
+	_button->update(_event,_mouse);
 	
 	if (_button->isPressed()) {
 		_button->reset();
 		ACTIVATED = true;
 	}
-	if (_event->type == Event::MouseButtonPressed && !_button->isPointed()) {
+	if (_event->type == Event::MouseButtonPressed && !_button->isPointed(_mouse)) {
 		_button->reset();
 		ACTIVATED = false;
 	}
 	if (ACTIVATED) {
-		if (_event->type == Event::TextEntered)addChar();
+		if (_event->type == Event::TextEntered)addChar(_event);
 	}
 	else {
 		_cursor->setFillColor(Color::Transparent);
@@ -76,7 +80,7 @@ void TextInput::update(){
 	_cursor->setPosition(_inputText->getLocalBounds().width + (_position.x + _size.x* OFFSET_X) + 5, _cursor->getPosition().y);
 }
 
-void TextInput::addChar()
+void TextInput::addChar(Event* _event)
 {
 		if (_event->text.unicode == '\b') {
 			if(_input.size() > 0)
@@ -94,15 +98,7 @@ void TextInput::addChar()
 
 }
 
-void TextInput::setPtr(Mouse* mouse, Event* evnt, Font* font)
-{
-	_mouse = mouse; 
-	_event = evnt;
-	_font = font;
-	_inputText->setFont(*_font);
-	_button->setPtr(_mouse, _event);
-	loadedFont = true;
-}
+
 
 void TextInput::setBackgroundTexture(string path){
 	_texture = new Texture();
@@ -140,20 +136,10 @@ TextInput::~TextInput(){
 	delete _cursor;
 	delete _inputText;
 	if (!loadedTexture)delete _texture;
-	if (!loadedFont)delete _font;
 }
 
 void TextInput::setFont(Font* font)
 {
 	_font = font;
 	_inputText->setFont(*_font);
-	loadedFont = true;
-}
-
-void TextInput::setFont(string path)
-{
-	_font = new Font();
-	_font->loadFromFile(path);
-	_inputText->setFont(*_font);
-	loadedFont = false;
 }

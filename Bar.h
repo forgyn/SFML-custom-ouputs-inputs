@@ -18,7 +18,7 @@ public:
 	void setIndicatorRectTexture(string path, IntRect rect);
 	void setIndicatorRectTexture(Texture* texture, IntRect rect);
 	void setColor(Color fillColor, Color outlineColor = Color::Transparent);
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 	void draw();
 	~Bar();
 private:

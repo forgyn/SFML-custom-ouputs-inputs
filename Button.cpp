@@ -70,13 +70,13 @@ void Button::draw()
 	_window->draw(*_backgroud);
 }
 
-void Button::update() {
+void Button::update(Event* _event,Mouse* _mouse) {
 
-	updateRatio();
+	updateRatio(_event);
 
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
-	if (isPointed()) {
+	if (isPointed(_mouse)) {
 		if (_event->type != Event::MouseButtonPressed) {
 			if(_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
@@ -94,7 +94,7 @@ void Button::update() {
 	}
 }
 
-bool Button::isPointed() {
+bool Button::isPointed(Mouse* _mouse) {
 	
 	//check x
 	if (_mouse->getPosition(*_window).x >= (_position.x-_backgroud->getOrigin().x)*_ratio.x
@@ -143,9 +143,9 @@ DraggableButton::DraggableButton(Vector2f size, Vector2f pos, RenderWindow* wind
 	_limit_min = Vector2f(0, 0);
 }
 
-void DraggableButton::update(){
+void DraggableButton::update(Event* _event, Mouse* _mouse){
 
-	updateRatio();
+	updateRatio(_event);
 	
 	//cout << _mouse->getPosition(*_window).x << " " << _mouse->getPosition(*_window).y << endl;
 	//cout << _mouse->getPosition(*_window).x / _ratio.x << " " << _mouse->getPosition(*_window).y / _ratio.y << endl;
@@ -175,7 +175,7 @@ void DraggableButton::update(){
 		_backgroud->setPosition(_position);
 	}
 
-	if (isPointed()) {
+	if (isPointed(_mouse)) {
 		//set follow
 		if (_event->type == Event::MouseButtonPressed && !FOLLOWING) {
 			_backgroud->setOrigin(
@@ -254,12 +254,12 @@ void TextButton::draw(){
 	_window->draw(*_text);
 }
 
-void TextButton::update(){
-	updateRatio();
+void TextButton::update(Event* _event, Mouse* _mouse){
+	updateRatio(_event);
 
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
-	if (isPointed()) {
+	if (isPointed(_mouse)) {
 		if (_event->type != Event::MouseButtonPressed) {
 			if (_backgroud->getFillColor() != Color::Transparent)
 				_backgroud->setFillColor(Color(

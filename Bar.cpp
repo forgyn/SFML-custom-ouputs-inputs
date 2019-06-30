@@ -156,13 +156,13 @@ void Bar::setColor(Color fillColor, Color outlineColor){
 	_indicator->setOutlineColor(outlineColor);
 }
 
-void Bar::update(){
+void Bar::update(Event* _event, Mouse* _mouse){
 	_indicator->setSize(Vector2f(_size.x*(stof(_value)/100),_size.y));
 }
 
 void Bar::draw()
 {
-	update();
+	update(nullptr,nullptr);
 	_window->draw(*_background);
 	_window->draw(*_indicator);
 	_window->draw(*_frontground);

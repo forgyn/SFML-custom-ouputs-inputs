@@ -10,8 +10,8 @@ public:
 	Button(Vector2f pos, Vector2f size, RenderWindow* window);
 	~Button();
 	void draw();
-	virtual void update();
-	bool isPointed();
+	virtual void update(Event* _event, Mouse* _mouse);
+	bool isPointed(Mouse* _mouse);
 	void setColor(const Color &color);
 	void setBackgroundTexture(string path);
 	void setBackgroundTexture(Texture* texture);
@@ -42,7 +42,7 @@ class DraggableButton : public Button {
 public:
 	DraggableButton(float size_x, float size_y, float pos_x, float pos_y, RenderWindow* window);
 	DraggableButton(Vector2f size, Vector2f pos, RenderWindow* window);
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 	bool FOLLOWING = false;
 	void changeMod(unsigned mod) { _mod = mod; }
 	void reset();
@@ -63,7 +63,7 @@ public:
 	TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window, Font* font);
 	~TextButton();
 	void draw();
-	void update();
+	void update(Event* _event, Mouse* _mouse);
 	void changeStyle(Uint32 style);
 	void setFont(Font* font);
 	void setFont(string path);
