@@ -232,13 +232,13 @@ TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, con
 	_window = window;
 	_text = new Text;
 	_text->setString(text);
+	_font = font;
+	_text->setFont(*_font);
 	_text->setCharacterSize(_size.y * TEXT_RATIO);
 	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 	_basic_text_color = Color::Black;
 	_text->setFillColor(_basic_text_color);
-	_font = font;
-	_text->setFont(*_font);
 	loadedFont = true;
 }
 
