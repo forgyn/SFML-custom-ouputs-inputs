@@ -71,12 +71,11 @@ void Button::draw()
 }
 
 void Button::update(Event* _event,Mouse* _mouse) {
-
 	updateRatio(_event);
 
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
-	if (isPointed(_mouse)) {
+	if (isPointed(_mouse) || PRESSED) {
 		if (_event->type != Event::MouseButtonPressed) {
 			if(_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
@@ -85,8 +84,13 @@ void Button::update(Event* _event,Mouse* _mouse) {
 				_basicColor.b * 0.5f));
 		}
 		else {
+			if (!PRESSED) {
+				PRESSED = true;
+			}
+			else {
+				PRESSED = false;
+			}
 			_backgroud->setFillColor(_basicColor);
-			PRESSED = true;
 		}
 	}
 	else {
@@ -260,28 +264,44 @@ void TextButton::update(Event* _event, Mouse* _mouse){
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
 	if (isPointed(_mouse)) {
-		if (_event->type != Event::MouseButtonPressed) {
-			if (_backgroud->getFillColor() != Color::Transparent)
-				_backgroud->setFillColor(Color(
-					_basicColor.r * 0.5f,
-					_basicColor.g * 0.5f,
-					_basicColor.b * 0.5f));
-			if (_text->getFillColor() != Color::Transparent)
-				_text->setFillColor(Color(
-					_basic_text_color.r * 0.5f,
-					_basic_text_color.g * 0.5f,
-					_basic_text_color.b * 0.5f
-				));
-		}
-		else {
+		if (_backgroud->getFillColor() != Color::Transparent)
+			_backgroud->setFillColor(Color(
+				_basicColor.r * 0.5f,
+				_basicColor.g * 0.5f,
+				_basicColor.b * 0.5f));
+		if (_text->getFillColor() != Color::Transparent)
+			_text->setFillColor(Color(
+				_basic_text_color.r * 0.5f,
+				_basic_text_color.g * 0.5f,
+				_basic_text_color.b * 0.5f
+			));
+		if (_event->type == Event::MouseButtonPressed) {
 			_backgroud->setFillColor(_basicColor);
 			_text->setFillColor(_basic_text_color);
-			PRESSED = true;
+			if (!PRESSED) {
+				PRESSED = true;
+			}
+			else {
+				PRESSED = false;
+			}
 		}
 	}
-	else {
+	else if (!PRESSED) {
 		_backgroud->setFillColor(_basicColor);
 		_text->setFillColor(_basic_text_color);
+	}
+	if (PRESSED) {
+		if (_backgroud->getFillColor() != Color::Transparent)
+			_backgroud->setFillColor(Color(
+				_basicColor.r * 0.5f,
+				_basicColor.g * 0.5f,
+				_basicColor.b * 0.5f));
+		if (_text->getFillColor() != Color::Transparent)
+			_text->setFillColor(Color(
+				_basic_text_color.r * 0.5f,
+				_basic_text_color.g * 0.5f,
+				_basic_text_color.b * 0.5f
+			));
 	}
 
 }
