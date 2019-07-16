@@ -40,6 +40,8 @@ Slider::Slider(Vector2f size, Vector2f pos, RenderWindow* window){
 	_backgroud->setPosition(_position);
 	_backgroud->setFillColor(Color::White);
 	_button = new DraggableButton(_size.x / _ration, _size.y, _position.x, _position.y, _window);
+	_sliderPos.x = 0;
+	_sliderPos.y = 0;
 	if (_size.x > _size.y) {
 		_button->changeMod(1);
 		_button->setLimit(_position.x, _position.x + _size.x, 0, 0);
@@ -66,6 +68,7 @@ void Slider::update(Event* _event, Mouse* _mouse){
 	updateRatio(_event);
 	_button->update(_event,_mouse);
 	if (_event->type == Event::MouseButtonReleased)release();
+	
 	if (_button->FOLLOWING) {
 		if (_mouse->getPosition(*_window).y / _ratio.y > _position.y + _size.y) release();
 		if (_mouse->getPosition(*_window).y / _ratio.y < _position.y) release();

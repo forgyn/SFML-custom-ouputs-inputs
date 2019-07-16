@@ -113,6 +113,7 @@ bool Button::isPointed(Mouse* _mouse) {
 
 void Button::setColor(const Color& color){
 	_basicColor = color;
+	_backgroud->setFillColor(_basicColor);
 }
 
 void Button::reset()
@@ -176,7 +177,6 @@ void DraggableButton::update(Event* _event, Mouse* _mouse){
 			_position.y = (_mouse->getPosition(*_window).y / _ratio.y);
 			
 		}
-		_backgroud->setPosition(_position);
 	}
 
 	if (isPointed(_mouse)) {
@@ -255,7 +255,6 @@ TextButton::~TextButton()
 }
 
 void TextButton::draw(){
-	
 	_window->draw(*_backgroud);
 	_window->draw(*_text);
 }
@@ -263,8 +262,7 @@ void TextButton::draw(){
 void TextButton::update(Event* _event, Mouse* _mouse){
 	updateRatio(_event);
 
-	_backgroud->setPosition(_position);
-	_backgroud->setSize(_size);
+
 	if (isPointed(_mouse)) {
 		if (_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
@@ -280,7 +278,7 @@ void TextButton::update(Event* _event, Mouse* _mouse){
 		if (_event->type == Event::MouseButtonPressed) {
 			_backgroud->setFillColor(_basicColor);
 			_text->setFillColor(_basic_text_color);
-			if (!PRESSED) {
+			if (!PRESSED ) {
 				PRESSED = true;
 			}
 			else {
@@ -337,6 +335,14 @@ void TextButton::setColor(Color bck_col, Color txt_col)
 	_text->setFillColor(_basic_text_color);
 }
 
+void TextButton::changePos(Vector2f pos)
+{
+	_position.x = pos.x - _backgroud->getOrigin().x;
+	_position.y = pos.y - _backgroud->getOrigin().y;
+	_backgroud->setPosition(_position);
+	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
+}
+
 void TextButton::setTextRatio(float ratio) {
 	_text_ratio = ratio;
 	_text->setCharacterSize(_size.y * _text_ratio * (_text->getCharacterSize()/_text->getLocalBounds().height));
@@ -344,3 +350,11 @@ void TextButton::setTextRatio(float ratio) {
 	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
 }
 
+void TextButton::getDebugInfo(){
+	cout << "Text origin            : " << _text->getOrigin().x << " " << _text->getOrigin().y << endl;
+	cout << "Text size              : " << _text->getLocalBounds().width << " " << _text->getLocalBounds().height << endl;
+	cout << "Background size        : " << _backgroud->getSize().x << " " << _backgroud->getSize().y << endl;
+	cout << "Text position          : " << _text->getPosition().x << " " << _text->getPosition().y << endl;
+	cout << "Background position    : " << _backgroud->getPosition().x << " " << _backgroud->getPosition().y << endl;
+	cout << "Offset                 : " << _position.x + ((_size.x - _text->getLocalBounds().width) / 2) << " " << _position.y + ((_size.y - _text->getLocalBounds().height) / 2) << endl;
+}
