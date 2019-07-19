@@ -263,15 +263,7 @@ TextButton::~TextButton()
 }
 
 void TextButton::draw(){
-	_window->draw(*_backgroud);
-	_window->draw(*_text);
-}
-
-void TextButton::update(Event* _event, Mouse* _mouse){
-	updateRatio(_event);
-
-
-	if (isPointed(_mouse)) {
+	if (POINTED || (_mod==1 && PRESSED)) {
 		if (_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
 				_basicColor.r * 0.5f,
@@ -283,21 +275,30 @@ void TextButton::update(Event* _event, Mouse* _mouse){
 				_basic_text_color.g * 0.5f,
 				_basic_text_color.b * 0.5f
 			));
-		if (_event->type == Event::MouseButtonPressed) {
-			_backgroud->setFillColor(_basicColor);
-			_text->setFillColor(_basic_text_color);
-			if (!PRESSED ) {
-				PRESSED = true;
-			}
-			else {
-				PRESSED = false;
-			}
-		}
 	}
-	else if (!PRESSED) {
+	else {
 		_backgroud->setFillColor(_basicColor);
 		_text->setFillColor(_basic_text_color);
 	}
+	_window->draw(*_backgroud);
+	_window->draw(*_text);
+}
+
+void TextButton::update(Event* _event, Mouse* _mouse){
+	updateRatio(_event);
+
+	if (isPointed(_mouse)) {
+		POINTED = true;
+		if (_event->type == Event::MouseButtonPressed) {
+			if (_mod == 1) {
+				if (PRESSED) PRESSED = false;
+				else PRESSED = false;
+			}
+			else PRESSED = true;
+		}
+	}
+	else POINTED = false;
+	/*
 	if (PRESSED) {
 		if (_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
@@ -310,7 +311,7 @@ void TextButton::update(Event* _event, Mouse* _mouse){
 				_basic_text_color.g * 0.5f,
 				_basic_text_color.b * 0.5f
 			));
-	}
+	}*/
 
 }
 
