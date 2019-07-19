@@ -28,7 +28,7 @@ Slider::Slider(float size_x, float size_y, float pos_x, float pos_y, RenderWindo
 		_button->setLimit(_position.x, _position.x + _size.x, _position.y, _position.y + _size.y);
 		
 	}
-	_button->changeMod(_mod);
+	_button->changeMoveMod(_mod);
 	_button->setColor(Color::Green);
 }
 
@@ -38,22 +38,27 @@ Slider::Slider(Vector2f size, Vector2f pos, RenderWindow* window){
 	_position = pos;
 	_backgroud = new RectangleShape(_size);
 	_backgroud->setPosition(_position);
-	_backgroud->setFillColor(Color::White);
-	_button = new DraggableButton(_size.x / _ration, _size.y, _position.x, _position.y, _window);
-	_sliderPos.x = 0;
-	_sliderPos.y = 0;
+	_backgroud->setFillColor(Color::Yellow);
+	//_button = new DraggableButton(_size.x / _ration, _size.y, _position.x, _position.y);
 	if (_size.x > _size.y) {
-		_button->changeMod(1);
+		_mod = 1;
+		_button = new DraggableButton(_size.x / _ration, _size.y, _position.x, _position.y, _window);
 		_button->setLimit(_position.x, _position.x + _size.x, 0, 0);
+
 	}
 	else if (_size.x < _size.y) {
-		_button->changeMod(2);
+		_mod = 2;
+		_button = new DraggableButton(_size.x, _size.y / _ration, _position.x, _position.y, _window);
 		_button->setLimit(0, 0, _position.y, _position.y + _size.y);
+
 	}
 	else {
-		_button->changeMod(0);
+		_mod = 0;
+		_button = new DraggableButton(_size.x / _ration, _size.y / _ration, _position.x, _position.y, _window);
 		_button->setLimit(_position.x, _position.x + _size.x, _position.y, _position.y + _size.y);
+
 	}
+	_button->changeMoveMod(_mod);
 	_button->setColor(Color::Green);
 }
 
@@ -68,13 +73,13 @@ void Slider::update(Event* _event, Mouse* _mouse){
 	updateRatio(_event);
 	_button->update(_event,_mouse);
 	if (_event->type == Event::MouseButtonReleased)release();
-	
+	/*
 	if (_button->FOLLOWING) {
 		if (_mouse->getPosition(*_window).y / _ratio.y > _position.y + _size.y) release();
 		if (_mouse->getPosition(*_window).y / _ratio.y < _position.y) release();
 		if (_mouse->getPosition(*_window).x / _ratio.x > _position.x + _size.x) release();
 		if (_mouse->getPosition(*_window).x / _ratio.x < _position.x) release();
-	}
+	}*/
 	_sliderPos.x = ((_button->getPos().x - _position.x) / (_size.x - _size.x / _ration)) * 100;
 	_sliderPos.y = ((_button->getPos().y - _position.y) / (_size.y - _size.y / _ration)) * 100;
 }

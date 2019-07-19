@@ -32,6 +32,7 @@ void Button::setBackgroundTexture(string path) {
 	_texture->loadFromFile(path);
 	_backgroud->setTexture(_texture);
 	_basicColor = Color::White;
+	_backgroud->setFillColor(_basicColor);
 }
 
 void Button::setBackgroundTexture(Texture* texture) {
@@ -39,6 +40,7 @@ void Button::setBackgroundTexture(Texture* texture) {
 	_backgroud->setTexture(_texture);
 	loadedTexture = true;
 	_basicColor = Color::White;
+	_backgroud->setFillColor(_basicColor);
 }
 
 void Button::setBackgroundRectTexture(string path, IntRect rect) {
@@ -47,6 +49,7 @@ void Button::setBackgroundRectTexture(string path, IntRect rect) {
 	_backgroud->setTexture(_texture);
 	_backgroud->setTextureRect(rect);
 	_basicColor = Color::White;
+	_backgroud->setFillColor(_basicColor);
 }
 
 void Button::setBackgroundRectTexture(Texture* texture, IntRect rect) {
@@ -55,11 +58,12 @@ void Button::setBackgroundRectTexture(Texture* texture, IntRect rect) {
 	loadedTexture = true;
 	_backgroud->setTextureRect(rect);
 	_basicColor = Color::White;
+	_backgroud->setFillColor(_basicColor);
 }
 
-bool Button::isPressed(bool unpress){
+bool Button::isPressed(){
 	if (PRESSED) {
-		if (unpress)PRESSED = false;
+		if (_mod == 0)PRESSED = false;
 		return true;
 	}
 	return false;
@@ -67,35 +71,32 @@ bool Button::isPressed(bool unpress){
 
 void Button::draw()
 {
+	if (POINTED || (_mod == 1 && PRESSED)) {
+		if (_backgroud->getFillColor() != Color::Transparent)
+			_backgroud->setFillColor(Color(
+				_basicColor.r * 0.5f,
+				_basicColor.g * 0.5f,
+				_basicColor.b * 0.5f));
+	}else _backgroud->setFillColor(_basicColor);
 	_window->draw(*_backgroud);
 }
 
 void Button::update(Event* _event,Mouse* _mouse) {
 	updateRatio(_event);
-
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
-	if (isPointed(_mouse) || PRESSED) {
-		if (_event->type != Event::MouseButtonPressed) {
-			if(_backgroud->getFillColor() != Color::Transparent)
-			_backgroud->setFillColor(Color(
-				_basicColor.r * 0.5f,
-				_basicColor.g * 0.5f,
-				_basicColor.b * 0.5f));
-		}
-		else {
-			if (!PRESSED) {
-				PRESSED = true;
+	if (isPointed(_mouse)) {
+		POINTED = true;
+		if (_event->type == Event::MouseButtonPressed) {
+			if (_mod == 1) {
+				if (PRESSED)PRESSED = false;
+				else PRESSED = true;
 			}
-			else {
-				PRESSED = false;
-			}
-			_backgroud->setFillColor(_basicColor);
+			else PRESSED = true;
 		}
 	}
-	else {
-		_backgroud->setFillColor(_basicColor);
-	}
+	else POINTED = false;
+
 }
 
 bool Button::isPointed(Mouse* _mouse) {
@@ -132,12 +133,18 @@ void Button::changeSize(Vector2f size){
 	_backgroud->setSize(_size);
 }
 
+void Button::changeMod(uint8_t mod)
+{
+	if (mod == 0 || mod == 1)_mod = mod;
+}
+
 DraggableButton::DraggableButton(float size_x, float size_y, float pos_x, float pos_y, RenderWindow* window)
 	:Button(size_x, size_y, pos_x, pos_y,window)
 {
 	_window = window;
 	_limit_max = Vector2f(_window->getSize().x, _window->getSize().y);
 	_limit_min = Vector2f(0, 0);
+	_mod = 0;
 }
 
 DraggableButton::DraggableButton(Vector2f size, Vector2f pos, RenderWindow* window)
@@ -146,6 +153,7 @@ DraggableButton::DraggableButton(Vector2f size, Vector2f pos, RenderWindow* wind
 	_window = window;
 	_limit_max = Vector2f(_window->getSize().x, _window->getSize().y);
 	_limit_min = Vector2f(0, 0);
+	_mod = 0;
 }
 
 void DraggableButton::update(Event* _event, Mouse* _mouse){
@@ -156,7 +164,7 @@ void DraggableButton::update(Event* _event, Mouse* _mouse){
 	//cout << _mouse->getPosition(*_window).x / _ratio.x << " " << _mouse->getPosition(*_window).y / _ratio.y << endl;
 	if (_event->type == Event::MouseButtonReleased && FOLLOWING)reset();
 	if (FOLLOWING) {
-		if (_mod == 0) {
+		if (_move_mod == 0) {
 			if((_mouse->getPosition(*_window).x / _ratio.x - _backgroud->getOrigin().x + _size.x) <= _limit_max.x
 				&& _mouse->getPosition(*_window).x / _ratio.x - _backgroud->getOrigin().x >= _limit_min.x)
 			_position.x = (_mouse->getPosition(*_window).x / _ratio.x);
@@ -165,13 +173,13 @@ void DraggableButton::update(Event* _event, Mouse* _mouse){
 				&& _mouse->getPosition(*_window).y / _ratio.y - _backgroud->getOrigin().y >= _limit_min.y)
 			_position.y = (_mouse->getPosition(*_window).y / _ratio.y);
 		}
-		else if (_mod == 1) {
+		else if (_move_mod == 1) {
 			
 			if (_mouse->getPosition(*_window).x / _ratio.x - _backgroud->getOrigin().x + _size.x <= _limit_max.x
 				&& _mouse->getPosition(*_window).x / _ratio.x - _backgroud->getOrigin().x >= _limit_min.x)
 			_position.x = (_mouse->getPosition(*_window).x / _ratio.x);
 		}
-		else if (_mod == 2) {
+		else if (_move_mod == 2) {
 			if (_mouse->getPosition(*_window).y / _ratio.y - _backgroud->getOrigin().y + _size.y <= _limit_max.y
 				&& _mouse->getPosition(*_window).y / _ratio.y - _backgroud->getOrigin().y >= _limit_min.y)
 			_position.y = (_mouse->getPosition(*_window).y / _ratio.y);
@@ -180,25 +188,23 @@ void DraggableButton::update(Event* _event, Mouse* _mouse){
 	}
 
 	if (isPointed(_mouse)) {
+		POINTED = true;
 		//set follow
-		if (_event->type == Event::MouseButtonPressed && !FOLLOWING) {
-			_backgroud->setOrigin(
-			Vector2f(
-			_size.x - ((_position.x + _size.x) - (_mouse->getPosition(*_window).x / _ratio.x))
-			,_size.y - ((_position.y + _size.y) - (_mouse->getPosition(*_window).y / _ratio.y))));
-			_position.x = (_mouse->getPosition(*_window).x / _ratio.x);
-			_position.y = (_mouse->getPosition(*_window).y / _ratio.y);
-			FOLLOWING = true;
+		if (_event->type == Event::MouseButtonPressed) {
 			PRESSED = true;
+			if (!FOLLOWING) {
+				FOLLOWING = true;
+				_backgroud->setOrigin(
+					Vector2f(
+						_size.x - ((_position.x + _size.x) - (_mouse->getPosition(*_window).x / _ratio.x))
+						, _size.y - ((_position.y + _size.y) - (_mouse->getPosition(*_window).y / _ratio.y))));
+				_position.x = (_mouse->getPosition(*_window).x / _ratio.x);
+				_position.y = (_mouse->getPosition(*_window).y / _ratio.y);	
+			}
 		}
-		//change color if pointed
-		_backgroud->setFillColor(Color(
-			_basicColor.r * 0.5f,
-			_basicColor.g * 0.5f,
-			_basicColor.b * 0.5f));
 	}
 	else {
-		_backgroud->setFillColor(_basicColor);
+		POINTED = false;
 	}
 	_backgroud->setPosition(_position);
 }
@@ -209,6 +215,8 @@ void DraggableButton::reset() {
 	_backgroud->setOrigin(Vector2f(0, 0));
 	_backgroud->setPosition(_position);
 	FOLLOWING = false;
+	PRESSED = false;
+	POINTED = false;
 }
 
 void DraggableButton::setLimit(float min_x, float max_x, float min_y, float max_y)

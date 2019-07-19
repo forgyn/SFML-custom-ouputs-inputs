@@ -6,8 +6,8 @@
 
 class Button : public InputElement {
 public:
-	Button(float pos_x, float pos_y, float size_x, float size_y,RenderWindow* window);
-	Button(Vector2f pos, Vector2f size, RenderWindow* window);
+	Button(float size_x, float size_y, float pos_x, float pos_y, RenderWindow* window);
+	Button(Vector2f size, Vector2f pos,  RenderWindow* window);
 	~Button();
 	void draw();
 	virtual void update(Event* _event, Mouse* _mouse);
@@ -21,21 +21,24 @@ public:
 	void setSpecialTexture(string path) {}
 	void setSpecialRectTexture(Texture* texture, IntRect rect) {}
 	void setSpecialRectTexture(string path, IntRect rect) {}
-	bool isPressed(bool unpress = true);
+	bool isPressed();
 	Vector2f getPos() { return Vector2f(_position.x-_backgroud->getOrigin().x,_position.y - _backgroud->getOrigin().y); }
 	void reset();
 	
 	void changePos(Vector2f pos);
 	void changeSize(Vector2f size);
+	void changeMod(uint8_t mod);
 protected:
 	Vector2f _size;
 	Vector2f _position;
 	Vector2u _defaultWindowSize;
+	uint8_t _mod = 0;
 	RectangleShape* _backgroud = nullptr;
 	Color _basicColor;
 	Texture* _texture = nullptr;
 	bool loadedTexture = false;
 	bool PRESSED = false;
+	bool POINTED = false;
 };
 
 class DraggableButton : public Button {
@@ -44,7 +47,7 @@ public:
 	DraggableButton(Vector2f size, Vector2f pos, RenderWindow* window);
 	void update(Event* _event, Mouse* _mouse);
 	bool FOLLOWING = false;
-	void changeMod(unsigned mod) { _mod = mod; }
+	void changeMoveMod(unsigned move_mod) { _move_mod = move_mod; }
 	void reset();
 	Vector2f getLeftUpCorner() { return Vector2f(_position.x,_position.y); }
 	Vector2f getRightDownCorner() { return Vector2f(_position.x + _size.x, _position.y + _size.y); }
@@ -52,7 +55,7 @@ public:
 	
 private:
 	//Vector2i _previousMousePos;
-	unsigned _mod = 0;
+	unsigned _move_mod = 0;
 	Vector2f _limit_max;
 	Vector2f _limit_min;
 };
