@@ -4,7 +4,7 @@ class Bar : OutputElement{
 public:
 	Bar(float pos_x, float pos_y, float size_x, float size_y,RenderWindow* window);
 	Bar(Vector2f pos, Vector2f size, RenderWindow* window);
-	void setValue(const string &value);
+	void setValue(const wstring &value);
 	void setBackgroundTexture(string path);
 	void setBackgroundTexture(Texture* texture);
 	void setBackgroundRectTexture(string path, IntRect rect);

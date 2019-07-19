@@ -20,9 +20,9 @@ public:
 	virtual void setSpecialRectTexture(string path, IntRect rect) = 0;
 	virtual void draw() = 0;
 	virtual void update(Event* _event,Mouse* _mouse) = 0;
-	virtual void setValue(const string &) = 0;
+	virtual void setValue(const wstring &) = 0;
 protected:
-	string _value;
+	wstring _value;
 	RenderWindow* _window;
 };
 

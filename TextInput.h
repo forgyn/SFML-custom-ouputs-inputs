@@ -20,7 +20,7 @@ public:
 	void setSpecialTexture(string path) {}
 	void setSpecialRectTexture(Texture* texture, IntRect rect) {}
 	void setSpecialRectTexture(string path, IntRect rect) {}
-	string getInput() { return _input; };
+	wstring getInput() { return _input; };
 	~TextInput();
 private:
 	Texture* _texture = nullptr;
@@ -30,7 +30,7 @@ private:
 	Button* _button = nullptr;
 	RectangleShape* _background = nullptr;
 	RectangleShape* _cursor = nullptr;
-	string _input = "";
+	wstring _input = L"";
 	Text* _inputText = nullptr;
 	Vector2f _size;
 	Vector2f _position;

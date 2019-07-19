@@ -71,6 +71,7 @@ public:
 	void setFont(Font* font);
 	void setFont(string path);
 	void setColor(Color bck_col,Color txt_col = Color::Black);
+	void setString(wstring str) { _text->setString(str); }
 	void setString(string str) { _text->setString(str); }
 	void changePos(Vector2f pos);
 	void setTextRatio(float ratio);

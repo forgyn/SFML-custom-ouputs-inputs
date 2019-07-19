@@ -7,7 +7,7 @@ public:
 	TextOutput(Vector2f pos, float size, Font* font, RenderWindow* window);
 	~TextOutput();
 	void draw();
-	void setValue(const string &value);
+	void setValue(const wstring &value);
 	void setColor(Color fillColor, Color outlineColor = Color::Transparent);
 	void setFont(Font* font);
 	void setFont(string path);

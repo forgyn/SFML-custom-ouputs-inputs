@@ -19,7 +19,7 @@ Bar::Bar(float pos_x, float pos_y, float size_x, float size_y, RenderWindow* win
 	_frontground->setPosition(_position);
 	_frontground->setFillColor(Color::Green);
 
-	_value = to_string(0.f);
+	_value = to_wstring(0.f);
 }
 
 Bar::Bar(Vector2f pos, Vector2f size, RenderWindow* window){
@@ -39,10 +39,10 @@ Bar::Bar(Vector2f pos, Vector2f size, RenderWindow* window){
 	_frontground->setPosition(_position);
 	_frontground->setFillColor(Color::Transparent);
 
-	_value = to_string(0.f);
+	_value = to_wstring(0.f);
 }
 
-void Bar::setValue(const string &value)
+void Bar::setValue(const wstring &value)
 {
 	if(stof(value)<=100 && stof(value) >= 0)
 	_value = value;

@@ -37,9 +37,10 @@ void TextOutput::draw(){
 	_window->draw(*_text);
 }
 
-void TextOutput::setValue(const string& value)
+void TextOutput::setValue(const wstring& value)
 {
 	_value = value;
+	_text->setString(_value);
 }
 
 void TextOutput::setColor(Color fillColor, Color outlineColor)
