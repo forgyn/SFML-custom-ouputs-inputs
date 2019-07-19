@@ -21,7 +21,7 @@ public:
 	void setSpecialTexture(string path) {}
 	void setSpecialRectTexture(Texture* texture, IntRect rect) {}
 	void setSpecialRectTexture(string path, IntRect rect) {}
-	bool isPressed();
+	bool isPressed(bool unpress = true);
 	Vector2f getPos() { return Vector2f(_position.x-_backgroud->getOrigin().x,_position.y - _backgroud->getOrigin().y); }
 	void reset();
 	

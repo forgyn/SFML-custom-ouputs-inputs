@@ -61,9 +61,9 @@ void Button::setBackgroundRectTexture(Texture* texture, IntRect rect) {
 	_backgroud->setFillColor(_basicColor);
 }
 
-bool Button::isPressed(){
+bool Button::isPressed(bool unpress){
 	if (PRESSED) {
-		if (_mod == 0)PRESSED = false;
+		if (_mod == 0 && unpress)PRESSED = false;
 		return true;
 	}
 	return false;
@@ -286,7 +286,6 @@ void TextButton::draw(){
 
 void TextButton::update(Event* _event, Mouse* _mouse){
 	updateRatio(_event);
-
 	if (isPointed(_mouse)) {
 		POINTED = true;
 		if (_event->type == Event::MouseButtonPressed) {
