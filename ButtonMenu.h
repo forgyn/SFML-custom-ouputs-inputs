@@ -41,7 +41,7 @@ public:
 
 	void draw();
 	bool operator[](size_t n);
-	uint16_t getSize() { return _menu.size(); }
+	uint16_t getSize() { return static_cast<uint16_t>(_menu.size()); }
 private:
 	Vector2f _pos;
 	Vector2f _size;
@@ -53,6 +53,10 @@ private:
 	Slider* _slider = nullptr;
 	View* _view = nullptr;
 	uint8_t _mod = 0;
+	int16_t BUTTON_SELECTED = -1;
+	Clock* _button_clock;
+	float _actual_size = 0;
+
 
 	Texture* _background_texture = nullptr;
 	bool _added_background_texture = false;

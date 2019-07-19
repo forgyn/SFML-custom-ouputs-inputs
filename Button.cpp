@@ -70,8 +70,16 @@ bool Button::isPressed(bool unpress){
 	return false;
 }
 
-void Button::draw()
-{
+void Button::removeTexture(Color color){
+	if (!loadedTexture)delete _texture;
+	_texture = nullptr;
+	_backgroud->setTexture(nullptr);
+	_basicColor = color;
+	_backgroud->setFillColor(_basicColor);
+	loadedTexture = false;
+}
+
+void Button::draw(){
 	if (POINTED || (PRESSED) || HOLDING) {
 		if (_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
@@ -86,36 +94,30 @@ void Button::update(Event* _event,Mouse* _mouse) {
 	updateRatio(_event);
 	_backgroud->setPosition(_position);
 	_backgroud->setSize(_size);
+	if (_event->type == Event::MouseButtonReleased) {
+		HOLDING = false;
+	}
 	if (isPointed(_mouse)) {
 		POINTED = true;
 		if (_event->type == Event::MouseButtonPressed) {
 			if (_mod == 1) {
-				if (PRESSED)PRESSED = false;
+				if (PRESSED) PRESSED = false;
 				else PRESSED = true;
 			}
 			else { 
-				PRESSED = true; 
 				HOLDING = true;
 			}
 		}
+		if (HOLDING)PRESSED = true;
 	}
 	else POINTED = false;
 
-	if (_event->type == Event::MouseButtonReleased) { 
-		HOLDING = false; 
-	}
+
 }
 
 bool Button::isPointed(Mouse* _mouse) {
-	
-	//check x
-	if (_mouse->getPosition(*_window).x >= (_position.x-_backgroud->getOrigin().x)*_ratio.x
-		&& _mouse->getPosition(*_window).x <= ((_position.x - _backgroud->getOrigin().x) + _size.x) * _ratio.x)
-		//check y
-		if (_mouse->getPosition(*_window).y >= (_position.y - _backgroud->getOrigin().y) * _ratio.y
-			&& _mouse->getPosition(*_window).y <= ((_position.y - _backgroud->getOrigin().y) + _size.y)* _ratio.y)
-			return true;
-
+	if (_backgroud->getGlobalBounds().contains(Vector2f(_mouse->getPosition(*_window).x, _mouse->getPosition(*_window).y)))
+		return true;
 	return false;
 }
 
@@ -127,6 +129,7 @@ void Button::setColor(const Color& color){
 void Button::reset()
 {
 	PRESSED = false;
+	HOLDING = false;
 }
 
 void Button::changePos(Vector2f pos) {
@@ -290,7 +293,7 @@ void TextButton::draw(){
 	_window->draw(*_backgroud);
 	_window->draw(*_text);
 }
-
+/*
 void TextButton::update(Event* _event, Mouse* _mouse){
 	updateRatio(_event);
 	if (isPointed(_mouse)) {
@@ -304,22 +307,10 @@ void TextButton::update(Event* _event, Mouse* _mouse){
 		}
 	}
 	else POINTED = false;
-	/*
-	if (PRESSED) {
-		if (_backgroud->getFillColor() != Color::Transparent)
-			_backgroud->setFillColor(Color(
-				_basicColor.r * 0.5f,
-				_basicColor.g * 0.5f,
-				_basicColor.b * 0.5f));
-		if (_text->getFillColor() != Color::Transparent)
-			_text->setFillColor(Color(
-				_basic_text_color.r * 0.5f,
-				_basic_text_color.g * 0.5f,
-				_basic_text_color.b * 0.5f
-			));
-	}*/
+	
+	
 
-}
+}*/
 
 void TextButton::changeStyle(Uint32 style){
 	_text->setStyle(style);

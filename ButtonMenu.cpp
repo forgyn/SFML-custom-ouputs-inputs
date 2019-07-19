@@ -14,7 +14,8 @@ ButtonMenu::ButtonMenu(float pos_x, float pos_y, float size_x, float size_y, flo
 	_slider = new Slider(_size.x * 0.1, _size.y, _pos.x + (_size.x * 0.9), _pos.y, _window);
 	_view = new View(FloatRect(_pos.x /*+ (_size.x / 2)*/, _pos.y /*+ (_size.y / 2)*/, _size.x, _size.y));
 	_view->setViewport(FloatRect(_pos.x / _window->getSize().x, _pos.y / _window->getSize().y, _size.x/_window->getSize().x, _size.y / _window->getSize().y));
-
+	_button_clock = new Clock;
+	_actual_size = _size.y;
 }
 
 ButtonMenu::~ButtonMenu(){
@@ -25,10 +26,11 @@ ButtonMenu::~ButtonMenu(){
 	if (_added_button_texture) delete _button_texture;
 	if (_added_slider_background_texture) delete _slider_background_texture;
 	if (_added_slider_texture) delete _slider_texture;
+	delete _button_clock;
 }
 
 void ButtonMenu::addButton(string text, Font* font){
-	_menu.push_back(new TextButton(0.8 * 0.9 * _size.x, _button_size, _pos.x + (_size.x * 0.1 * 0.9), _pos.y+ (_button_size * 0.2) + (_menu.size() * _button_size * 1.2), text, _window, font));
+	_menu.push_back(new TextButton(0.8 * 0.9 * _size.x, _button_size, _pos.x + (_size.x * 0.1 * 0.9), _pos.y + (_button_size * 0.2) + (_menu.size() * _button_size * 1.2), text, _window, font));
 	if (_loaded_button_texture) { 
 		if (_rect_button_texture) {
 			_menu.back()->setBackgroundRectTexture(_button_texture,_button_rect);
@@ -38,22 +40,62 @@ void ButtonMenu::addButton(string text, Font* font){
 		}
 	}
 	else _menu.back()->setColor(Color::Magenta);
-	_menu.back()->changeMod(_mod);
+	if(_mod != 2)_menu.back()->changeMod(_mod);
+	else _menu.back()->changeMod(1);
+
+	_actual_size = ((static_cast<float>(_menu.size()) * _button_size * 1.2) - _size.y + (_button_size * 0.2));
 }
 
-void ButtonMenu::update(Event* _event, Mouse* _mouse)
-{
-	if(_background.getGlobalBounds().contains(static_cast<float>(_mouse->getPosition(*_window).x), static_cast<float>(_mouse->getPosition(*_window).y)))
-	/*if (_mouse->getPosition(*_window).x>= _pos.x && _mouse->getPosition(*_window).x<= _pos.x+_size.x
-		&& _mouse->getPosition(*_window).y >= _pos.y && _mouse->getPosition(*_window).y <= _pos.x + _size.y)*/ {
-		for (int i = 0; i < _menu.size(); i++) {
-			_menu[i]->update(_event, _mouse);
+void ButtonMenu::update(Event* _event, Mouse* _mouse){
+	
+	
+	//( (static_cast<float>(_menu.size()) * _button_size * 1.2) - _size.y + (_button_size * 0.2))
+	if(_background.getGlobalBounds().contains(static_cast<float>(_mouse->getPosition(*_window).x), static_cast<float>(_mouse->getPosition(*_window).y))) {
+		switch (_mod) {
+		case 0:
+		case 1:
+			for (int i = 0; i < _menu.size(); i++) {
+				_menu[i]->update(_event, _mouse);
+			}
+			break;
+		case 2:
+			for (int i = 0; i < _menu.size(); i++) {
+				_menu[i]->update(_event, _mouse);
+				if (_event->type == Event::MouseButtonPressed)
+				if (_menu[i]->isPointed(_mouse)) {
+					if (BUTTON_SELECTED == -1) {
+						BUTTON_SELECTED = i;
+					}
+					else if (BUTTON_SELECTED == i) {
+						BUTTON_SELECTED = -1;
+					}
+
+				}
+				if (BUTTON_SELECTED != i)_menu[i]->reset();
+			}
+			break;
+		case 3:
+			for (int i = 0; i < _menu.size(); i++) {
+				_menu[i]->update(_event, _mouse);
+				if (_event->type == Event::MouseButtonPressed)
+					if (_menu[i]->isPointed(_mouse)) {
+						if (BUTTON_SELECTED == i)BUTTON_SELECTED = -1;
+						else BUTTON_SELECTED = i;
+					}	
+			}
+			for (int i = 0; i < _menu.size(); i++)if (BUTTON_SELECTED != i)_menu[i]->reset();
+			break;
 		}
+		
 		if ((((static_cast<float>(_menu.size())) * _button_size))*1.2 >= _size.y) {
+			if (_event->type == Event::MouseWheelMoved) {
+				_slider->setInput(Vector2f(0, _slider->getInput().y + _event->mouseWheel.delta*(-1)*(_size.y/100)));
+			}
 			_slider->update(_event, _mouse);
 			for (int i = 0; i < _menu.size(); i++) {
-				_menu[i]->changePos(Vector2f(_pos.x + (_size.x * 0.1 * 0.9), _pos.y + ((static_cast<float>(i)) * _button_size * 1.2) - ((_slider->getInput().y / 100) * ( (static_cast<float>(_menu.size()) * _button_size * 1.2) - _size.y))));
+				_menu[i]->changePos(Vector2f(_pos.x + (_size.x * 0.1 * 0.9), _pos.y + ((static_cast<float>(i)) * _button_size * 1.2) + (_button_size * 0.2) - ((_slider->getInput().y / 100)*_actual_size)));
 			}
+
 		}
 	}
 	else _slider->release();
@@ -61,9 +103,10 @@ void ButtonMenu::update(Event* _event, Mouse* _mouse)
 
 void ButtonMenu::changeMod(uint8_t mod)
 {
-	if (mod == 0 || mod == 1)_mod = mod;
+	if (mod == 0 || mod == 1 || mod == 2 || mod == 3)_mod = mod;
 	for (int i = 0; i < _menu.size(); i++) {
-		_menu[i]->changeMod(_mod);
+		if(_mod == 2 || _mod == 3)_menu[i]->changeMod(1);
+		else _menu[i]->changeMod(_mod);
 	}
 }
 
