@@ -63,6 +63,7 @@ void Button::setBackgroundRectTexture(Texture* texture, IntRect rect) {
 
 bool Button::isPressed(bool unpress){
 	if (PRESSED) {
+		if (HOLDING)return true;
 		if (_mod == 0 && unpress)PRESSED = false;
 		return true;
 	}
@@ -71,7 +72,7 @@ bool Button::isPressed(bool unpress){
 
 void Button::draw()
 {
-	if (POINTED || (_mod == 1 && PRESSED)) {
+	if (POINTED || (PRESSED) || HOLDING) {
 		if (_backgroud->getFillColor() != Color::Transparent)
 			_backgroud->setFillColor(Color(
 				_basicColor.r * 0.5f,
@@ -92,11 +93,17 @@ void Button::update(Event* _event,Mouse* _mouse) {
 				if (PRESSED)PRESSED = false;
 				else PRESSED = true;
 			}
-			else PRESSED = true;
+			else { 
+				PRESSED = true; 
+				HOLDING = true;
+			}
 		}
 	}
 	else POINTED = false;
 
+	if (_event->type == Event::MouseButtonReleased) { 
+		HOLDING = false; 
+	}
 }
 
 bool Button::isPointed(Mouse* _mouse) {

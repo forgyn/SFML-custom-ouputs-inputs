@@ -43,9 +43,9 @@ void ButtonMenu::addButton(string text, Font* font){
 
 void ButtonMenu::update(Event* _event, Mouse* _mouse)
 {
-
-	if (_mouse->getPosition(*_window).x>= _pos.x && _mouse->getPosition(*_window).x<= _pos.x+_size.x
-		&& _mouse->getPosition(*_window).y >= _pos.y && _mouse->getPosition(*_window).y <= _pos.x + _size.y) {
+	if(_background.getGlobalBounds().contains(static_cast<float>(_mouse->getPosition(*_window).x), static_cast<float>(_mouse->getPosition(*_window).y)))
+	/*if (_mouse->getPosition(*_window).x>= _pos.x && _mouse->getPosition(*_window).x<= _pos.x+_size.x
+		&& _mouse->getPosition(*_window).y >= _pos.y && _mouse->getPosition(*_window).y <= _pos.x + _size.y)*/ {
 		for (int i = 0; i < _menu.size(); i++) {
 			_menu[i]->update(_event, _mouse);
 		}

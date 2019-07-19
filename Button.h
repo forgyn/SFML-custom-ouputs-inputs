@@ -39,6 +39,7 @@ protected:
 	bool loadedTexture = false;
 	bool PRESSED = false;
 	bool POINTED = false;
+	bool HOLDING = false;
 };
 
 class DraggableButton : public Button {
