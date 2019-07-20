@@ -62,9 +62,14 @@ void Button::setBackgroundRectTexture(Texture* texture, IntRect rect) {
 }
 
 bool Button::isPressed(bool unpress){
+	if (HOLDING && _mod == 0) {
+		PRESSED = true;
+	}
 	if (PRESSED) {
-		if (HOLDING)return true;
-		if (_mod == 0 && unpress)PRESSED = false;
+		if (_mod == 0) { 
+			PRESSED = false;
+			if (unpress) HOLDING = false;
+		}
 		return true;
 	}
 	return false;
@@ -237,18 +242,18 @@ void DraggableButton::setLimit(float min_x, float max_x, float min_y, float max_
 	_limit_min.y = min_y;
 }
 
-TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y,  const string& text, RenderWindow* window)
-	:Button(size_x, size_y,pos_x,pos_y,window){
-	_window = window;
-	_text = new Text;
-	_text->setString(text);
-	_text_ratio = TEXT_RATIO;
-	_text->setCharacterSize(_size.y * _text_ratio);
-	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
-	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
-	_basic_text_color = Color::Black;
-	_text->setFillColor(_basic_text_color);
-}
+//TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y,  const string& text, RenderWindow* window)
+//	:Button(size_x, size_y,pos_x,pos_y,window){
+//	_window = window;
+//	_text = new Text;
+//	_text->setString(text);
+//	_text_ratio = TEXT_RATIO;
+//	_text->setCharacterSize(_size.y * _text_ratio);
+//	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
+//	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
+//	_basic_text_color = Color::Black;
+//	_text->setFillColor(_basic_text_color);
+//}
 
 TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window, Font* font)
 :Button(size_x, size_y, pos_x, pos_y, window){
@@ -265,7 +270,21 @@ TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, con
 	_text->setFillColor(_basic_text_color);
 	loadedFont = true;
 }
-
+TextButton::TextButton(float size_x, float size_y, float pos_x, float pos_y, const wstring& text, RenderWindow* window, Font* font)
+	:Button(size_x, size_y, pos_x, pos_y, window) {
+	_window = window;
+	_text = new Text;
+	_text->setString(text);
+	_font = font;
+	_text->setFont(*_font);
+	_text_ratio = TEXT_RATIO;
+	_text->setCharacterSize(_size.y * _text_ratio);
+	_text->setOrigin(_text->getLocalBounds().left, _text->getLocalBounds().top);
+	_text->setPosition(_position.x + ((_size.x - _text->getLocalBounds().width) / 2), _position.y + ((_size.y - _text->getLocalBounds().height) / 2));
+	_basic_text_color = Color::Black;
+	_text->setFillColor(_basic_text_color);
+	loadedFont = true;
+}
 TextButton::~TextButton()
 {
 	delete _text;

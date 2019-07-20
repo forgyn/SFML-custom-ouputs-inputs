@@ -29,7 +29,7 @@ ButtonMenu::~ButtonMenu(){
 	delete _button_clock;
 }
 
-void ButtonMenu::addButton(string text, Font* font){
+void ButtonMenu::addButton(wstring text, Font* font){
 	_menu.push_back(new TextButton(0.8 * 0.9 * _size.x, _button_size, _pos.x + (_size.x * 0.1 * 0.9), _pos.y + (_button_size * 0.2) + (_menu.size() * _button_size * 1.2), text, _window, font));
 	if (_loaded_button_texture) { 
 		if (_rect_button_texture) {
@@ -40,12 +40,28 @@ void ButtonMenu::addButton(string text, Font* font){
 		}
 	}
 	else _menu.back()->setColor(Color::Magenta);
-	if(_mod != 2)_menu.back()->changeMod(_mod);
+	if(_mod != 2 && _mod != 3)_menu.back()->changeMod(_mod);
 	else _menu.back()->changeMod(1);
 
 	_actual_size = ((static_cast<float>(_menu.size()) * _button_size * 1.2) - _size.y + (_button_size * 0.2));
 }
 
+void ButtonMenu::addButton(string text, Font* font) {
+	_menu.push_back(new TextButton(0.8 * 0.9 * _size.x, _button_size, _pos.x + (_size.x * 0.1 * 0.9), _pos.y + (_button_size * 0.2) + (_menu.size() * _button_size * 1.2), text, _window, font));
+	if (_loaded_button_texture) {
+		if (_rect_button_texture) {
+			_menu.back()->setBackgroundRectTexture(_button_texture, _button_rect);
+		}
+		else {
+			_menu.back()->setBackgroundTexture(_button_texture);
+		}
+	}
+	else _menu.back()->setColor(Color::Magenta);
+	if (_mod != 2 && _mod != 3)_menu.back()->changeMod(_mod);
+	else _menu.back()->changeMod(1);
+
+	_actual_size = ((static_cast<float>(_menu.size()) * _button_size * 1.2) - _size.y + (_button_size * 0.2));
+}
 void ButtonMenu::update(Event* _event, Mouse* _mouse){
 	
 	
@@ -314,4 +330,9 @@ bool ButtonMenu::operator[](size_t n){
 
 	if (_menu[n]->isPressed())return true;
 	return false;
+}
+
+void ButtonMenu::reset()
+{
+	for (int i = 0; i < _menu.size(); i++)_menu[i]->reset();
 }

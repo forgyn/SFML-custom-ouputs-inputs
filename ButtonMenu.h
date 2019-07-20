@@ -9,9 +9,11 @@ using namespace std;
 class ButtonMenu{
 public:
 	ButtonMenu(float pos_x, float pos_y,float size_x,float size_y,float button_height,RenderWindow *window);
+
 	~ButtonMenu();
 
 	void addButton(string text, Font* font);
+	void addButton(wstring text, Font* font);
 	void update(Event *event,Mouse *mouse);
 	void changeMod(uint8_t mod);
 
@@ -41,6 +43,7 @@ public:
 
 	void draw();
 	bool operator[](size_t n);
+	void reset();
 	uint16_t getSize() { return static_cast<uint16_t>(_menu.size()); }
 private:
 	Vector2f _pos;

@@ -21,7 +21,7 @@ public:
 	void setSpecialTexture(string path) {}
 	void setSpecialRectTexture(Texture* texture, IntRect rect) {}
 	void setSpecialRectTexture(string path, IntRect rect) {}
-	bool isPressed(bool unpress = true);
+	bool isPressed(bool unpress = false);
 	void removeTexture(Color color = Color::Yellow);
 	Vector2f getPos() { return Vector2f(_position.x-_backgroud->getOrigin().x,_position.y - _backgroud->getOrigin().y); }
 	void reset();
@@ -64,7 +64,8 @@ private:
 
 class TextButton : public Button {
 public:
-	TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window);
+	//TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window);
+	TextButton(float size_x, float size_y, float pos_x, float pos_y, const wstring& text, RenderWindow* window, Font* font);
 	TextButton(float size_x, float size_y, float pos_x, float pos_y, const string& text, RenderWindow* window, Font* font);
 	~TextButton();
 	void draw();
